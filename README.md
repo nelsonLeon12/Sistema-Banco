@@ -1,6 +1,6 @@
 # Sistema-Banco
 
--nelson leon
--luis canales
--fabian lopez
--hernnandes
+-nelson leon;
+-luis canales;
+-fabian lopez;
+-hernnandes;
