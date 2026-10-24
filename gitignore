@@ -1,0 +1,62 @@
+# =====================================================================
+# .gitignore · Banco Sierra Nevada · Proyecto Integrador
+# El repositorio es la fuente de verdad: aquí van solo código, diseño y
+# documentación. Nunca credenciales, copias de datos ni archivos locales.
+# =====================================================================
+
+# --- Credenciales y configuración local (NUNCA subir) ----------------
+.env
+.env.*
+!.env.example
+*.env
+.pgpass
+pgpass.conf
+*.pem
+*.key
+secrets/
+credenciales*
+config.local.*
+
+# --- Copias de seguridad y volcados de la base -----------------------
+# (la evidencia de restauración se documenta en docs/, no se sube el volcado)
+*.dump
+*.backup
+*.bak
+*.tar
+*.sql.gz
+*.sql.zip
+backups/
+
+# --- Archivos temporales y de salida ---------------------------------
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+psql_history
+.psql_history
+
+# --- Empaquetados generados (se entregan por el repositorio) ---------
+*.zip
+*.rar
+*.7z
+
+# --- Draw.io / diagrams.net: copias automáticas ----------------------
+# (los .drawio y los .png/.pdf exportados SÍ se suben)
+*.drawio.bkp
+*.drawio.dtmp
+.$*.drawio.bkp
+.$*.drawio.dtmp
+
+# --- Documentos de Office abiertos (archivos de bloqueo) -------------
+~$*
+
+# --- Editores e IDEs --------------------------------------------------
+.vscode/
+.idea/
+*.sublime-workspace
+
+# --- Sistema operativo ------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
