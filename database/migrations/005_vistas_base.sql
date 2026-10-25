@@ -1,35 +1,64 @@
--- =====================================================================
--- 005_vistas_base.sql
--- Vistas que materializan atributos DERIVADOS del modelo conceptual
--- (edad y remuneración). No almacenan datos redundantes.
--- =====================================================================
-BEGIN;
+-- =======================
+-- 005_vistas_simples.sql
+--========================
 
--- Edad calculada a partir de la fecha de nacimiento.
-CREATE VIEW v_persona_edad AS
-SELECT p.cedula,
-       concat_ws(' ', p.primer_nombre, p.segundo_nombre,
-                      p.primer_apellido, p.segundo_apellido) AS nombre_completo,
-       p.fecha_nacimiento,
-       EXTRACT(YEAR FROM age(CURRENT_DATE, p.fecha_nacimiento))::INT AS edad
-FROM persona p;
+-- 1. total de usuarios
 
--- Remuneración de cada empleado según su tipo:
---   CAJERO              → salario mínimo del año en curso + bono
---   SERVICIOS_GENERALES → salario mínimo del año en curso
---   VIGILANTE           → se paga por hora (remuneracion_mensual queda NULL)
-CREATE VIEW v_remuneracion_empleado AS
-SELECT e.cedula,
-       e.id_sucursal,
-       e.tipo_empleado,
-       CASE e.tipo_empleado
-            WHEN 'CAJERO'              THEN sm.valor_mensual + c.bono_mensual
-            WHEN 'SERVICIOS_GENERALES' THEN sm.valor_mensual
-       END AS remuneracion_mensual,
-       v.valor_hora
-FROM empleado e
-LEFT JOIN cajero c                ON c.cedula = e.cedula
-LEFT JOIN vigilante_contratista v ON v.cedula = e.cedula
-LEFT JOIN salario_minimo sm       ON sm.anio = EXTRACT(YEAR FROM CURRENT_DATE)::SMALLINT;
+SELECT (SELECT COUNT(*) FROM persona)  AS total_personas,
+       (SELECT COUNT(*) FROM cliente)  AS total_clientes,
+       (SELECT COUNT(*) FROM empleado) AS total_empleados;
 
-COMMIT;
+
+-- 3. solo cajeros
+SELECT cedula,
+       (SELECT primer_nombre || ' ' || primer_apellido FROM persona
+        WHERE persona.cedula = cajero.cedula) AS nombre,
+       bono_mensual
+FROM cajero;
+
+
+-- 4. solo servicios generales
+SELECT cedula,
+       (SELECT primer_nombre || ' ' || primer_apellido
+        FROM persona
+        WHERE persona.cedula = servicios_generales.cedula) AS nombre
+FROM servicios_generales;
+
+
+-- 5. vigilantes contratistas (de otra empresa)
+
+SELECT cedula,
+       (SELECT primer_nombre || ' ' || primer_apellido
+        FROM persona
+        WHERE persona.cedula = vigilante_contratista.cedula) AS nombre,
+       nit_empresa,
+       (SELECT nombre
+        FROM empresa_seguridad
+        WHERE empresa_seguridad.nit = vigilante_contratista.nit_empresa) AS empresa,
+       valor_hora
+FROM vigilante_contratista;
+
+
+-- 6. los 10 clientes con mas dinero (suma de todas sus cuentas)
+SELECT cedula_titular AS cedula,
+       (SELECT primer_nombre || ' ' || primer_apellido
+        FROM persona
+        WHERE persona.cedula = cuenta.cedula_titular) AS nombre,
+       COUNT(*)   AS num_cuentas,
+       SUM(saldo) AS saldo_total
+FROM cuenta
+GROUP BY cedula_titular
+ORDER BY saldo_total DESC, cedula_titular
+LIMIT 10;
+
+
+-- 7. total de dinero guardado en el banco
+SELECT (SUM(saldo)) AS total_dinero_banco FROM cuenta;
+
+
+-- 8. total pagado a los empleados por mes
+-- (cajeros + servicios generales) x salario minimo del año + bonos de los cajeros
+-- los vigilantes no suman: se pagan por hora y no se guardan las horas
+SELECT ((SELECT COUNT(*) FROM cajero) + (SELECT COUNT(*) FROM servicios_generales))
+       * (SELECT valor_mensual FROM salario_minimo WHERE anio = EXTRACT(YEAR FROM CURRENT_DATE))
+       + (SELECT COALESCE(SUM(bono_mensual), 0) FROM cajero) AS total_nomina_mensual;

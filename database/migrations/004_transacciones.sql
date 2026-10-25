@@ -2,8 +2,7 @@
 -- 004_transacciones.sql
 -- Catálogo de tipos de transacción, historial de transacciones y registro
 -- separado del impuesto (4x1000) cobrado sobre cada una.
--- =====================================================================
-BEGIN;
+-- === 
 
 -- TIPO_TRANSACCION: catálogo con la tasa de impuesto vigente de cada tipo.
 -- (Los datos del catálogo se cargan en 006_catalogos.sql.)
@@ -75,4 +74,3 @@ CREATE TABLE impuesto_transaccion (
     CONSTRAINT ck_impuesto_valor CHECK (valor_impuesto > 0)
 );
 
-COMMIT;

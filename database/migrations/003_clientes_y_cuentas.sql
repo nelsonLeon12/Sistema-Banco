@@ -3,7 +3,7 @@
 -- Cliente (subtipo de persona), su registro en sucursales (relación
 -- N:M "Se registra") y las cuentas de ahorro.
 -- =====================================================================
-BEGIN;
+
 
 -- CLIENTE: subtipo de PERSONA. Una persona puede ser cliente y empleado a la vez.
 -- Un cliente = una cédula = un único registro en todo el banco (resuelve los
@@ -58,4 +58,4 @@ CREATE TABLE cuenta (
         CHECK (estado <> 'CANCELADA' OR saldo = 0)
 );
 
-COMMIT;
+

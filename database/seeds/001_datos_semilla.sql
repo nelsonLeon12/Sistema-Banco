@@ -6,7 +6,7 @@
 -- Ejecutar DESPUÉS de las migraciones 001-006, sobre base sin datos.
 -- =====================================================================
 SET client_encoding = 'UTF8';
-BEGIN;
+
 
 -- ---------------------------------------------------------------------
 -- 1. SUCURSALES (4 sedes en el Cesar)
@@ -228,4 +228,3 @@ SET saldo =
 SELECT setval(pg_get_serial_sequence('sucursal',    'id_sucursal'),    (SELECT MAX(id_sucursal)    FROM sucursal));
 SELECT setval(pg_get_serial_sequence('transaccion', 'id_transaccion'), (SELECT MAX(id_transaccion) FROM transaccion));
 
-COMMIT;

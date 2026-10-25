@@ -3,7 +3,7 @@
 -- Datos de referencia que el sistema necesita para operar (no son datos
 -- de prueba): tipos de transacción con su tasa y salario mínimo legal.
 -- =====================================================================
-BEGIN;
+
 
 -- Supuesto de alcance: solo se modela el impuesto a las transacciones
 -- financieras (4x1000 = 0,004) sobre retiros y transferencias, sin las
@@ -19,4 +19,3 @@ INSERT INTO salario_minimo (anio, valor_mensual) VALUES
     (2025, 1423500.00),
     (2026, 1750905.00);
 
-COMMIT;

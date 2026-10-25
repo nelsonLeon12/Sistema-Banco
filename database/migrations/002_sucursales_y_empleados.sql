@@ -4,7 +4,6 @@
 -- especialización disjunta de EMPLEADO (cajero / servicios generales /
 -- vigilante contratista).
 -- =====================================================================
-BEGIN;
 
 -- SUCURSAL: lo que en la Entrega 1 aparecía como la entidad "Banco Sierra
 -- Nevada" (id interno, nombre, dirección, horario) es en realidad una sede.
@@ -113,4 +112,4 @@ CREATE TABLE vigilante_contratista (
         REFERENCES empresa_seguridad (nit) ON DELETE RESTRICT
 );
 
-COMMIT;
+
