@@ -33,5 +33,5 @@ ORDER BY saldo_total DESC
 LIMIT 10;
 
 -- 6. total de dinero guardado en el banco
-SELECT COALESCE(SUM(saldo), 0) AS total_dinero_banco
-FROM cuenta;
+SELECT SUM(saldo) AS total_dinero_banco
+FROM cuenta;	
